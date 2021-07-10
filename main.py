@@ -67,11 +67,11 @@ column_names = [
 dataset = loadDataPandas.read('./dataset/subway.csv', column_names)
 stations = list(set(dataset['지하철역'].to_numpy()))
 
+
 class App:
   def __init__(self, station):
     self.__station = station
     self.select_dataset = dataset[dataset['지하철역'] == station][column_names[3:]].to_numpy()
-  
 
   def findRideAndQuitData(self):
     if stations.count(self.__station) == 0:
@@ -89,7 +89,6 @@ class App:
       new_data[1].append(quit)
     return new_data
 
-
   def drawRideAndQuitGraph(self):
     _data = self.findRideAndQuitData()
     if _data != 0:
@@ -102,35 +101,25 @@ class App:
     else:
       print("해당 역의 데이터를 조회할 수 없습니다.")
 
-
   def trainingRideAndQuitModel(self):
-    print('학습 중...')
     _data = self.findRideAndQuitData()
-
     x_data = np.ravel(_data[0], order='C')
     y_data = np.ravel(_data[1], order='C')
-
     X = tf.placeholder(tf.float32, shape=None)
     Y = tf.placeholder(tf.float32, shape=None)
     W = tf.Variable(tf.random_uniform([1], -100, 100), 'weight')
     b = tf.Variable(tf.random_uniform([1], -100, 100), 'bias')
     H = X * W + b
-
     cost = tf.reduce_mean(tf.square(H - Y))
     optimizer = tf.train.GradientDescentOptimizer(tf.Variable(0.00000000001))
     train = optimizer.minimize(cost)
-
     session = tf.Session()
     session.run(tf.global_variables_initializer())
-
     for step in range(100001):
       session.run(train, feed_dict = { X: x_data, Y: y_data })
       if step % 10000 == 0:
         print(step, session.run(cost, feed_dict = { X: x_data, Y: y_data }), session.run(W), session.run(b))
-
-    print('학습 완료')
     return session
-
 
   def findCongestionData(self):
     new_data = []
@@ -143,7 +132,6 @@ class App:
       new_data.append(layer)
     return new_data
 
-
   def drawCongestionGraph(self):
     _data = self.findCongestionData()
     for arr in _data:    plt.plot(arr, 'ro')
@@ -151,6 +139,7 @@ class App:
     plt.xlabel('시간대')
     plt.ylabel('혼잡도')
     plt.show()
+
 
 while 1:
   station = input('\n👉 지금 어디 역에 계시나요? (종료: 0)\n')
