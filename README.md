@@ -1,4 +1,4 @@
-# Subway Congestion Prediction Program
+# Subway congestion prediction
 
 ## 📚 Description
 
