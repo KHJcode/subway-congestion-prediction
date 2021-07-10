@@ -3,7 +3,7 @@ print('=' * 10, '[ 🚇 지하철 혼잡도 예측 프로그램 🚇 ]', '=' * 1
 import numpy  as np
 import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
-from lib import loadDataPandas
+from utils import loadDataPandas
 
 tf.disable_v2_behavior()
 plt.rc('font', family='Malgun Gothic')
