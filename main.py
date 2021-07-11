@@ -91,8 +91,6 @@ class App:
     self.now = 0
 
   def findRideAndQuitData(self):
-    if stations.count(self.__station) == 0:
-      return 0
     new_data = [[], []]  
     for data in self.select_dataset:
       ride = []
@@ -108,15 +106,12 @@ class App:
 
   def drawRideAndQuitGraph(self):
     _data = self.findRideAndQuitData()
-    if _data != 0:
-      for i in range(len(_data[0])):
-        plt.plot(_data[0][i], _data[1][i], 'ro')
+    for i in range(len(_data[0])):
+      plt.plot(_data[0][i], _data[1][i], 'ro')
       plt.title(f'{self.__station}의 승·하차 인원 수 관계')
       plt.xlabel('승차 인원')
       plt.ylabel('하차 인원')
       plt.show()
-    else:
-      print("해당 역의 데이터를 조회할 수 없습니다.")
 
   '''
   def trainingRideAndQuitModel(self):
@@ -211,9 +206,12 @@ class App:
 while 1:
   station = input('\n👉 지금 어디 역에 계시나요? (종료: 0)\n')
   if station == '0':  break
-  app = App(station)
-  print('Loading...')
-  app.trainingCongestionModel()
-  print(getShellText('[ 학습 완료 ]'))
-  app.predictionCongestion()
-  app.drawCongestionGraph()
+  if stations.count(station) != 0:
+    app = App(station)
+    print('Loading...')
+    app.trainingCongestionModel()
+    print(getShellText('[ 학습 완료 ]'))
+    app.predictionCongestion()
+    app.drawCongestionGraph()
+    continue
+  print('=> 해당 역의 데이터를 조회할 수 없습니다.')
