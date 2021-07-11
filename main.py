@@ -74,7 +74,7 @@ stations = list(set(dataset['지하철역'].to_numpy()))
 class App:
   def __init__(self, station):
     self.__station = station
-    self.select_dataset = dataset[dataset['지하철역'] == station][column_names[3:]].to_numpy()
+    self.select_dataset = dataset[dataset['지하철역'] == station][slot_names].to_numpy()
     self.X = tf.placeholder(tf.float32, shape=None)
     self.Y = tf.placeholder(tf.float32, shape=None)
     self.W = tf.Variable(tf.random_uniform([1], -100, 100), 'weight')
