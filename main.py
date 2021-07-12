@@ -89,7 +89,8 @@ class App:
     self.slots  = []
     self.getString = lambda x: '0' + str(x) if x < 10 else str(x)
     self.now = 0
-
+  
+  '''
   def findRideAndQuitData(self):
     new_data = [[], []]  
     for data in self.select_dataset:
@@ -113,7 +114,7 @@ class App:
       plt.ylabel('하차 인원')
       plt.show()
 
-  '''
+
   def trainingRideAndQuitModel(self):
     _data = self.findRideAndQuitData()
     x_data = np.ravel(_data[0], order='C')
