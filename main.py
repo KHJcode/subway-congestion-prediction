@@ -198,7 +198,7 @@ class App:
     average = sum(self.y_data) // 24
     print('_' * 10)
     print(f'\n[⏰ {self.getString(self.now.hour)}:{self.getString(self.now.minute)}]\n')
-    print(f'● 예측 혼잡도 : {result}')
+    print(f'● 예측 혼잡도 : {result if result > 0 else 0}')
     print(f'● {"혼잡한 시간대입니다." if average < result else "여유로운 시간대입니다."}')
     print('_' * 10)
     
