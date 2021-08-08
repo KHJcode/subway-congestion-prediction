@@ -3,6 +3,7 @@
 ## 📚 Description
 
 Subway congestion prediction program developed in Python.
+Station data is from South Korea.
 
 <br/>
 
