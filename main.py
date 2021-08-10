@@ -1,14 +1,18 @@
 getShellText = lambda text: "=" * 10 + text + "=" * 10
 print(getShellText('[ 🚇 지하철 혼잡도 예측 프로그램 🚇 ]'), '\nLoading...')
 
-import numpy  as np
+
 import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
+from rich.console import Console
+from rich.table import Table
+from rich.progress import track
 from datetime import datetime
 from utils import loadDataPandas
 
 tf.disable_v2_behavior()
 plt.rc('font', family='Malgun Gothic')
+
 
 print(getShellText('[ 모듈 로딩 완료 ✔ ]'))
 
@@ -173,7 +177,8 @@ class App:
     for i in range(len(new_data)):
       self.y_data.append(new_data[i][1])
       self.slots.append(new_data[i][0])
-    for step in range(10000):
+    print()
+    for _ in track(range(10000), description="학습 중...", style="white"):
       session.run(
         self.train,
         feed_dict = {
@@ -181,7 +186,6 @@ class App:
           self.Y: self.y_data
         },
       )
-      if step % 1000 == 0:  print('...')
     self.congestion_session = session
 
   def getNowSlotIndex(self):
@@ -196,22 +200,34 @@ class App:
     i = self.getNowSlotIndex()
     result = self.congestion_session.run(self.H, feed_dict={ self.X: [i] })[0]
     average = sum(self.y_data) // 24
-    print('_' * 10)
-    print(f'\n[⏰ {self.getString(self.now.hour)}:{self.getString(self.now.minute)}]\n')
-    print(f'● 예측 혼잡도 : {result if result > 0 else 0}')
-    print(f'● {"혼잡한 시간대입니다." if average < result else "여유로운 시간대입니다."}')
-    print('_' * 10)
+    max_result = max(self.y_data)
+    console = Console()
+    table = Table(show_header=True, header_style="bold yellow")
+    table.add_column("현재 시각 ", style="dim", width=12)
+    table.add_column("역 ")
+    table.add_column("혼잡도 ")
+    table.add_column("승·하차 인원 ")
+    table.add_column("상태 ")
+    table.add_row(
+      self.getString(self.now.hour) + ':' + self.getString(self.now.minute),
+      self.__station,
+      str(round(result / max_result * 100, 5)) + '%',
+      str(result if result > 0 else 0),
+      "혼잡함" if result > average else "여유로움",
+    )
+    console.print(table)
+
     
 
 
 while 1:
-  station = input('\n👉 지금 어디 역에 계시나요? (종료: 0)\n')
+  station = input('\n\n👉 지금 어디 역에 계시나요? (종료: 0)\n')
   if station == '0':  break
   if stations.count(station) != 0:
     app = App(station)
-    print('Loading...')
+    print()
     app.trainingCongestionModel()
-    print(getShellText('[ 학습 완료 ]'))
+    print(f'\n{getShellText("[ 학습 완료 ]")}\n\n')
     app.predictionCongestion()
     app.drawCongestionGraph()
     continue
