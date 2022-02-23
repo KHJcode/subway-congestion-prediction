@@ -1,14 +1,12 @@
 # Subway congestion prediction
 
-## 📚 Description
-
 Subway congestion prediction program developed in Python.
 <br/>
 Station data is from South Korea.
 
 <br/>
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 $ pip3 install -r requirements.txt
@@ -16,7 +14,7 @@ $ pip3 install -r requirements.txt
 
 <br/>
 
-## 🚀 Running the app
+## Running the app
 
 ```bash
 $ python main.py
